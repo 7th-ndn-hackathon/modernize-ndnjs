@@ -28,7 +28,7 @@
   </form>
 </section>
 
-<script src="https://cdn.jsdelivr.net/gh/7th-ndn-hackathon/ndn-js@e74bffe5127a41ec51cd28874fd8fd8cc5774564/build/ndn.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/7th-ndn-hackathon/ndn-js@47104ec25caec12850b42fa4722e562d6089c250/build/ndn.js"></script>
 <script>
 function startPing() {
   const router = document.getElementById("t_router").value;
@@ -42,13 +42,14 @@ function startPing() {
     const name = new ndn.Name(prefix).append(suffix);
     console.log(name.toUri());
     const t0 = new Date().getTime();
-    face.expressInterest(name,
-      () => {
-        const t1 = new Date().getTime();
-        document.getElementById("t_nData").value = ++nData;
-        document.getElementById("t_rtt").value = t1 - t0;
-      }
-    );
+
+    face.expressInterestPromise(name)
+    .then(() => {
+      const t1 = new Date().getTime();
+      document.getElementById("t_nData").value = ++nData;
+      document.getElementById("t_rtt").value = t1 - t0;
+    })
+    .catch(console.warn);
     document.getElementById("t_nInterests").value = ++nInterests;
   }, 1000);
 

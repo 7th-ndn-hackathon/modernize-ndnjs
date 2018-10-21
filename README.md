@@ -13,3 +13,4 @@ DEBUG=* node build/consumer.js
 ## Browser ndnping
 
 [ndnping.html](src/ndnping.html) demonstrates a `ndn.js` bundle compiled with [Browserify](http://browserify.org/).
+It also uses `Face.prototype.expressInterestPromise` API instead of callback-based `Face.prototype.expressInterest`.
