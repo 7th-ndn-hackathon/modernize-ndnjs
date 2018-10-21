@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>ndnping</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/barecss@1.1.1/css/bare.min.css">
+
+<section>
+  <form>
+    <fieldset>
+      <label>Router</label>
+      <input id="t_router" type="text" value="wss://hobo.cs.arizona.edu/ws/">
+
+      <label>Prefix</label>
+      <input id="t_prefix" type="text" value="/ndn/edu/arizona">
+
+      <input id="btn_start" type="button" value="PING">
+
+      <label>Interest sent</label>
+      <input id="t_nInterests" readonly value="">
+
+      <label>Data received</label>
+      <input id="t_nData" readonly value="">
+
+      <label>Last RTT (ms)</label>
+      <input id="t_rtt" readonly value="">
+    </fieldset>
+  </form>
+</section>
+
+<script src="https://cdn.jsdelivr.net/gh/7th-ndn-hackathon/ndn-js@e74bffe5127a41ec51cd28874fd8fd8cc5774564/build/ndn.js"></script>
+<script>
+function startPing() {
+  const router = document.getElementById("t_router").value;
+  const prefix = new ndn.Name(document.getElementById("t_prefix").value).append("ping");
+  const face = new ndn.Face({host: router});
+
+  let nInterests = 0;
+  let nData = 0;
+  setInterval(() => {
+    const suffix = new ndn.Name.Component("" + Math.floor(Math.random() * 100000000));
+    const name = new ndn.Name(prefix).append(suffix);
+    console.log(name.toUri());
+    const t0 = new Date().getTime();
+    face.expressInterest(name,
+      () => {
+        const t1 = new Date().getTime();
+        document.getElementById("t_nData").value = ++nData;
+        document.getElementById("t_rtt").value = t1 - t0;
+      }
+    );
+    document.getElementById("t_nInterests").value = ++nInterests;
+  }, 1000);
+
+  document.getElementById("t_router").readOnly = true;
+  document.getElementById("t_prefix").readOnly = true;
+  document.getElementById("btn_start").disabled = true;
+}
+document.getElementById("btn_start").addEventListener("click", startPing);
+</script>

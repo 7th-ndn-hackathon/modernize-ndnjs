@@ -9,3 +9,7 @@ Notice the `"strict": true` setting in [tsconfig.json](tsconfig.json).
 npm run build
 DEBUG=* node build/consumer.js
 ```
+
+## Browser ndnping
+
+[ndnping.html](src/ndnping.html) demonstrates a `ndn.js` bundle compiled with [Browserify](http://browserify.org/).
